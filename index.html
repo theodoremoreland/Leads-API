@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<HTML>
+    <head>
+        <title>
+            Index
+        </title>
+
+    </head>
+    <body>
+        <p id="p1"></p>
+    </body>
+    <script>
+        let p = document.querySelectorAll("#p1");
+        let timeFormat = new Date().toISOString();
+        p.innerHTML = timeFormat;
+        console.log("Hi", timeFormat);
+    </script>
+</HTML>

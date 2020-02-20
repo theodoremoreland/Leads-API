@@ -1,31 +1,42 @@
+# Native
+import json
+
+# App
 from flask import request
 from flask_api import FlaskAPI
-from pprint import pprint
-import json
 from pymongo import MongoClient
+
+# Formatting
+from pprint import pprint
 from bson.json_util import dumps
 
-# ? userID
-# ? recordID
-# ? consultant
-# ? consEmail
-# ? bizUnit- STL
-# ? clientAcct-
-# ? capability
-# ? leadName
-# ? tmEmail
-# ? cmEmail
-# ? desc
-# ? status
-# ? nextSteps
-# ? dateSubmitted
+# Custom
+from validation import has_all_keys, has_correct_datatypes, has_valid_emails
+ 
+# Able to store a list of json for all leads and update status (from salesforce)
+# Update lead records via application
 
-# ? userID
-# ? consultant
-# ? password
-# ? consEmail
-# ? tmEmail
-# ? cmEmail
+# @param userID
+# @param recordID
+# @param consultant
+# @param consEmail
+# @param bizUnit
+# @param clientAcct
+# @param capability
+# @param leadName
+# @param tmEmail
+# @param cmEmail
+# @param desc
+# @param status
+# @param nextSteps
+# @param dateSubmitted
+
+# @param userID
+# @param consultant
+# @param password
+# @param consEmail
+# @param tmEmail
+# @param cmEmail
 
 # Initialize the Flask App
 app = FlaskAPI(__name__)
@@ -40,70 +51,52 @@ DB =client["Leads"]
 users_collection = DB.Users
 records_collection = DB.Records
 
-#print(users_collection)
-
-# Build an API with endpoints to:
+# ? Renders index page with list of all endpoints.
 @app.route("/", methods=["GET"])
 def home():
         return {
         "routes": {
-            "/": "Root, shows list of available routes",
-            "/create-user": "make a new user account",
-            "/add": "get all",
-            "/find": "Find a document"
+            "/": """Root, shows list of available routes.
+             All GET requests return json objects and all POST requests accept a json object""",
+            "/create-user": "Add a new user to the database",
+            "/create-record": "Add a new lead to the database",
+            "/get-records/{id}": "Return a specific lead document by userID",
+            "/get-users": "Return a list of all user documents"
         }
     }
 
-# Create new _id/consultant/password/consEmail
-## No validation
+# ? Create new _id/consultant/password/consEmail
+# ! Data passed through this function is not validated before sending to database.
 @app.route("/create-user", methods=["POST"])
 def create_user():
     q = request.data  
     users_collection.insert_one(q)
     return "Hey, you did it!"
 
-# users can create a new record
-# Validation for all fields
-# userID; recordID; consultant; consEmail; bizUnit; clientAcct
-# capability; leadName; tmEmail; cmEmail; desc; status; nextSteps
-# dateSubmitted
-
-def has_all_keys(data):
-    expected_keys = ["userID", "recordID", "consultant", "consEmail",
-                    "bizUnit", "clientAcct", "capability", "leadName",
-                    "tmEmail", "cmEmail", "desc", "status", "nextSteps",
-                    "dateSubmitted"]
-    actual_keys = data.keys()
-    missing_keys = []
-    for key in expected_keys:
-        if key not in actual_keys:
-            missing_keys.append(key)
-    if len(missing_keys) == 0:
-        return {"True":[]} 
-    else:
-        return {"False":missing_keys}
-
-
+# ? Users can create a new record.
 @app.route("/create-record", methods=["POST"])
 def create_record():
     q = request.data  
-    print(has_all_keys(q)) 
+    print(has_all_keys(q))
+    print(has_correct_datatypes(q))
+    print(has_valid_emails(q)) 
     records_collection.insert_one(q)
     return "Hey, cool!"
 
-#users can retrieve records they have submitted
+# ? Users can retrieve records they have submitted.
 @app.route("/get-records/<string:id>", methods=["GET"])
 def get_record(id):
     if id.lower() == "All".lower():
         pass
     else:
-        d = {"userID":id}
+        d = {"userID": id}
         results = records_collection.find(d)
         results = dumps(results)
         results = json.loads(results)
         return results
     return "Here's your stuff!"
 
+# ?  Returns all user records in json format
 @app.route("/get-users", methods=["GET"])
 def get_users():
     d = {}
@@ -111,6 +104,16 @@ def get_users():
     results = dumps(results)
     results = json.loads(results)
     return results
+
+# ?  Accepts a list of json leads / records and updates them in database
+@app.route("/update-records", methods=["POST"])
+def update_records():
+    q = request.data
+    for document in q:
+        _filter = { "recordID": document["recordID"] }
+        update = { "$set": document }
+        records_collection.update_one(_filter, update)
+    return "Hi"
 
 if __name__ == "__main__":
     app.run(debug=True)
