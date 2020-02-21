@@ -1,0 +1,67 @@
+
+        User
+___________________________
+
+{
+	"userID": "1",
+	"consultant": "Amy Smith",
+	"password": "gogo",
+	"consEmail": "amy.smith@company.com",
+	"tmEmail": "team.manager@company.com",
+	"cmEmail": "consultant.manager@dcompany.com"
+}
+
+        Record
+___________________________
+
+{
+	"consultant":"Amy",
+	"userID":"123",
+	"recordID":"666",
+	"consEmail":"amy.smith@company.com",
+    "bizUnit":"STL",
+    "clientAcct":"Express",
+    "capability":"xyz",
+    "leadName":"Mo's Garage",
+    "tmEmail":"tm.com",
+    "cmEmail":"cm.com",
+    "desc":"make moremoney",
+    "status":"new",
+    "nextSteps": "call Mo",
+    "dateSubmitted": "02/20/2020"
+}
+
+        Update
+___________________________
+[{
+	"consultant":"Tom",
+	"userID":"2",
+	"recordID":"2000",
+	"consEmail":"tom.smith@company.com",
+    "bizUnit":"STL",
+    "clientAcct":"Google",
+    "capability":"xyz",
+    "leadName":"Tim's Garage",
+    "tmEmail":"tm.com",
+    "cmEmail":"cm.com",
+    "desc":"make moremoney",
+    "status":"new",
+    "nextSteps": "call Mo",
+    "dateSubmitted": "02/20/2020"
+},
+{
+	"consultant":"Amy",
+	"userID":"1",
+	"recordID":"1000",
+	"consEmail":"amy.smith@company.com",
+    "bizUnit":"STL",
+    "clientAcct":"Express",
+    "capability":"xyz",
+    "leadName":"Mo's Garage",
+    "tmEmail":"tm.com",
+    "cmEmail":"cm.com",
+    "desc":"make moremoney",
+    "status":"new",
+    "nextSteps": "call Mo",
+    "dateSubmitted": "02/20/2020"
+}]

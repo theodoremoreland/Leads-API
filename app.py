@@ -3,7 +3,7 @@ import json
 
 # App
 from flask import request
-from flask_api import FlaskAPI
+from flask_api import FlaskAPI, status
 from pymongo import MongoClient
 
 # Formatting
@@ -11,7 +11,7 @@ from pprint import pprint
 from bson.json_util import dumps
 
 # Custom
-from validation import has_all_keys, has_correct_datatypes, has_valid_emails
+from validation import has_all_keys, has_valid_ids, has_valid_emails
  
 # Able to store a list of json for all leads and update status (from salesforce)
 # Update lead records via application
@@ -61,7 +61,9 @@ def home():
             "/create-user": "Add a new user to the database",
             "/create-record": "Add a new lead to the database",
             "/get-records/{id}": "Return a specific lead document by userID",
-            "/get-users": "Return a list of all user documents"
+            "/get-users": "Return a list of all user documents",
+            "/update-records": "Updates one or more lead documents",
+            "/get-highest-id/<string:collection>/<string:field>" : "Get highest id"
         }
     }
 
@@ -71,35 +73,35 @@ def home():
 def create_user():
     q = request.data  
     users_collection.insert_one(q)
-    return "Hey, you did it!"
+    return f'{status.HTTP_201_CREATED} : Content created.'
 
 # ? Users can create a new record.
 @app.route("/create-record", methods=["POST"])
 def create_record():
     q = request.data  
-    print(has_all_keys(q))
-    print(has_correct_datatypes(q))
-    print(has_valid_emails(q)) 
+    print(f'Keys: {has_all_keys(q)}')
+    print(f'Datatypes: {has_valid_ids(q)}')
+    print(f'E-mails: {has_valid_emails(q)}')
     records_collection.insert_one(q)
-    return "Hey, cool!"
+    return f'{status.HTTP_201_CREATED} : Content created.'
 
 # ? Users can retrieve records they have submitted.
 @app.route("/get-records/<string:id>", methods=["GET"])
 def get_record(id):
-    if id.lower() == "All".lower():
-        pass
-    else:
-        d = {"userID": id}
-        results = records_collection.find(d)
 
-        # Converts results to string.
-        results = dumps(results)
+    # ? The below variable assignment represents either a "find all" query...
+    # ? or a "find by id" query.
+    d = {} if id.lower() == "all" else {"userID": int(id)}
 
-        # Converts results to json / dictionary
-        results = json.loads(results)
+    results = records_collection.find(d)
 
-        return results
-    return "Here's your stuff!"
+    # Converts results to string.
+    results = dumps(results)
+
+    # Converts results to json / dictionary
+    results = json.loads(results)
+
+    return results
 
 # ? Returns all user records in json format
 @app.route("/get-users", methods=["GET"])
@@ -115,11 +117,34 @@ def get_users():
 
     return results
 
-# ? Accepts a list of json leads/records and updates them in database
+# ? Returns the highest userID or recordID.
+@app.route("/get-highest-id/<string:collection>/<string:field>", methods=["GET"])
+def get_highest_id(collection, field):
+    
+    if collection.lower() == "users":
+        results = users_collection.find().sort(field, -1).limit(1)
+    else:
+        results = records_collection.find().sort(field, -1).limit(1)
+
+    # Converts results to string.
+    results = dumps(results)
+
+    # Converts results to json / dictionary
+    results = json.loads(results)
+
+    return results
+
+# ? Accepts a list of json leads/records and updates them in database.
+# ? Can update all records or just one, but data must be passed in as an array / list
 @app.route("/update-records", methods=["POST"])
 def update_records():
-    q = request.data
-    for document in q:
+
+    json_array = request.data
+
+    if not isinstance(json_array, list):
+        return f'{status.HTTP_406_NOT_ACCEPTABLE} : json objects much be in an array.'
+
+    for document in json_array:
 
         # Specifies only records of the chosen ID.
         _filter = { "recordID": document["recordID"] }
@@ -128,7 +153,7 @@ def update_records():
         update = { "$set": document }
 
         records_collection.update_one(_filter, update)
-    return "Hi"
+    return f'{status.HTTP_202_ACCEPTED} : Updates accepted.'
 
 if __name__ == "__main__":
     app.run(debug=True)

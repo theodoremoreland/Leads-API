@@ -17,12 +17,12 @@ def has_all_keys(data):
         if key not in actual_keys:
             missing_keys.append(key)
     if len(missing_keys) == 0:
-        return {"Valid": "True", "Data": missing_keys} 
+        return {"Valid": True, "Data": actual_keys} 
     else:
-        return {"Valid": "False", "Data": missing_keys}
+        return {"Valid": False, "Data": missing_keys}
 
 
-def has_correct_datatypes(data):
+def has_valid_ids(data):
     """
         userID should be int
         recordID should be int
@@ -30,36 +30,41 @@ def has_correct_datatypes(data):
         everything else should be strings
     """
     try:
-        int(data["userID"])
+        data["userID"] - 6
     except:
-        return "userID not a valid number"
+        return False
 
     try:
-        int(data["recordID"])
+        data["recordID"] - 6
     except:
-        return "recordID not a valid number"
-
-    return {"Valid": "True", "Data": [data["userID"], data["recordID"]]}
+        return False
+    return True
 
 
 def has_valid_emails(data):
+    """
+        Validates all three e-mails.
+        consEmail, tmEmail, and cmEmail.
+    """
 
+    emails = [data["consEmail"], data["tmEmail"], data["cmEmail"]]
     invalid_emails = []
-
-    # ! Matches a string with one '@' before a '.' and has no spaces throughout.
+    
+    
+    # ? Matches a string with one '@' before a '.' and has no spaces throughout.
     regex = re.compile(r"^[^@\s]+?@[^@\s]+?\.[^@\s]+$")
     
-    # ! Returns None is string doesn't meet regex requirements.
-    if re.fullmatch(regex, data["consEmail"]) is None:
-        invalid_emails.append(data["consEmail"])
+    # ? Returns None if string doesn't meet regex requirements.
+    if re.fullmatch(regex, emails[0]) is None:
+        invalid_emails.append(emails[0])
 
-    if re.fullmatch(regex, data["tmEmail"]) is None:
-        invalid_emails.append(data["tmEmail"])
+    if re.fullmatch(regex, emails[1]) is None:
+        invalid_emails.append(emails[1])
 
-    if re.fullmatch(regex, data["cmEmail"]) is None:
-        invalid_emails.append(data["cmEmail"])
+    if re.fullmatch(regex, emails[2]) is None:
+        invalid_emails.append(emails[2])
     
     if len(invalid_emails) == 0:
-        return {"Valid": "True", "Data": invalid_emails}
+        return True
     else:
-        return {"Valid": "False", "Data": invalid_emails}
+        return False
