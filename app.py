@@ -45,9 +45,9 @@ app = FlaskAPI(__name__)
 client = MongoClient('mongodb://localhost:27017/')
 
 # Reference database
-DB =client["Leads"]
+DB = client["Leads"]
 
-# Reference companies collection
+# Reference each collection
 users_collection = DB.Users
 records_collection = DB.Records
 
@@ -57,7 +57,7 @@ def home():
         return {
         "routes": {
             "/": """Root, shows list of available routes.
-             All GET requests return json objects and all POST requests accept a json object""",
+             All GET requests return json object(s) and all POST requests accept json object(s)""",
             "/create-user": "Add a new user to the database",
             "/create-record": "Add a new lead to the database",
             "/get-records/{id}": "Return a specific lead document by userID",
@@ -91,27 +91,42 @@ def get_record(id):
     else:
         d = {"userID": id}
         results = records_collection.find(d)
+
+        # Converts results to string.
         results = dumps(results)
+
+        # Converts results to json / dictionary
         results = json.loads(results)
+
         return results
     return "Here's your stuff!"
 
-# ?  Returns all user records in json format
+# ? Returns all user records in json format
 @app.route("/get-users", methods=["GET"])
 def get_users():
     d = {}
     results = users_collection.find(d)
+
+    # Converts results to string.
     results = dumps(results)
+
+    # Converts results to json / dictionary
     results = json.loads(results)
+
     return results
 
-# ?  Accepts a list of json leads / records and updates them in database
+# ? Accepts a list of json leads/records and updates them in database
 @app.route("/update-records", methods=["POST"])
 def update_records():
     q = request.data
     for document in q:
+
+        # Specifies only records of the chosen ID.
         _filter = { "recordID": document["recordID"] }
+
+        # Specifies key(s) : value(s) to be updated.
         update = { "$set": document }
+
         records_collection.update_one(_filter, update)
     return "Hi"
 
