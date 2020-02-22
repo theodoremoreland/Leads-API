@@ -68,3 +68,16 @@ def has_valid_emails(data):
         return True
     else:
         return False
+
+
+def has_valid_date(data):
+    """
+        Current valid date format:
+        2020-02-22T14:09:31.963Z
+    """
+    regex = re.compile(r"^\d{4}-\d{2}-[\dA-Z]{5}:\d{2}:\d{2}.\d{3}Z$")
+
+    if re.fullmatch(regex, data["dateSubmitted"]) is None:
+        return False
+    else:
+        return True

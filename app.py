@@ -11,7 +11,7 @@ from pprint import pprint
 from bson.json_util import dumps
 
 # Custom
-from validation import has_all_keys, has_valid_ids, has_valid_emails
+from validation import has_all_keys, has_valid_ids, has_valid_emails, has_valid_date
  
 # Able to store a list of json for all leads and update status (from salesforce)
 # Update lead records via application
@@ -82,6 +82,7 @@ def create_record():
     print(f'Keys: {has_all_keys(q)}')
     print(f'Datatypes: {has_valid_ids(q)}')
     print(f'E-mails: {has_valid_emails(q)}')
+    print(f'Date: {has_valid_date(q)}')
     records_collection.insert_one(q)
     return f'{status.HTTP_201_CREATED} : Content created.'
 
