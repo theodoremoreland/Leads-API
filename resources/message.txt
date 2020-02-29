@@ -1,0 +1,33 @@
+
+<img src = "https://i.imgur.com/ub82QdD.png" alt = "leads">
+<br>
+<br>
+<font face = "verdana">
+<strong>A new lead has just been submitted!</strong><br>
+<br>
+Consultant Name:  ${consultant}<br>
+Submission Date:  ${dateSubmitted}<br>
+<br>
+Opportunity Name:  ${leadName}<br>
+Business Unit:  ${bizUnit}<br>
+Client Account:  ${account}<br>
+Capability / Area of Focus:  ${capability}<br>
+Client Contact:  ${clientContact}<br>
+Client Department / Organization:  ${clientDept}<br>
+<br>
+<u>Description:</u><br>
+${desc}<br>
+<br>
+Next Steps: Your Team Manager will be reaching out to discuss your submission.
+<br>
+<br>
+<font size ="+1">Contact Information:</font>
+<ul>
+<li>Consultant: ${consEmail}</li>
+<li>Team Manager: ${tmEmail}</li>
+<li>Client Manager: ${cmEmail}</li>
+</ul><br>
+To return to the LEaDS website: <br>
+https://www.daugherty-leads.com
+</font>
+

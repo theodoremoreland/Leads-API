@@ -3,14 +3,14 @@ import re
 def has_all_keys(data):
     """
         Validation for all fields
-        userID; recordID; consultant; consEmail; bizUnit; clientAcct
-        capability; leadName; tmEmail; cmEmail; desc; status; nextSteps
-        dateSubmitted
+        userId; salesForceId; consultant; consEmail; bizUnit; clientAcct
+        capability; leadName; tmEmail; cmEmail; desc; stage; nextSteps
+        dateSubmitted; clientContact; clientDept
     """
-    expected_keys = ["userID", "recordID", "consultant", "consEmail",
+    expected_keys = ["userId", "salesForceId", "consultant", "consEmail",
                     "bizUnit", "clientAcct", "capability", "leadName",
-                    "tmEmail", "cmEmail", "desc", "status", "nextSteps",
-                    "dateSubmitted"]
+                    "tmEmail", "cmEmail", "desc", "stage",
+                    "dateSubmitted", "clientContact", "clientDept"]
     actual_keys = data.keys()
     missing_keys = []
     for key in expected_keys:
@@ -23,22 +23,11 @@ def has_all_keys(data):
 
 
 def has_valid_ids(data):
-    """
-        userID should be int
-        recordID should be int
-        dateSubmitted should be in valid datetime format
-        everything else should be strings
-    """
     try:
-        data["userID"] - 6
+        data["userId"] -6
+        return True
     except:
         return False
-
-    try:
-        data["recordID"] - 6
-    except:
-        return False
-    return True
 
 
 def has_valid_emails(data):
@@ -73,9 +62,9 @@ def has_valid_emails(data):
 def has_valid_date(data):
     """
         Current valid date format:
-        2020-02-22T14:09:31.963Z
+        2/25/2020  (M/D/YYYY)
     """
-    regex = re.compile(r"^\d{4}-\d{2}-[\dA-Z]{5}:\d{2}:\d{2}.\d{3}Z$")
+    regex = re.compile(r"((10)|(11)|(12)|\d)/\d\d{0,1}?/\d{4}")
 
     if re.fullmatch(regex, data["dateSubmitted"]) is None:
         return False

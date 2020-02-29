@@ -16,19 +16,22 @@ ___________________________
 
 {
 	"consultant":"Amy",
-	"userID":"123",
-	"recordID":"666",
-	"consEmail":"amy.smith@company.com",
-    "bizUnit":"STL",
-    "clientAcct":"Express",
-    "capability":"xyz",
+	"userId":123, 
+	"salesForceId":"567", 
+	"consEmail":"kelly.sorbello@bando.com",
+    "bizUnit":"STL", 
+    "capability":"xyz", 
     "leadName":"Mo's Garage",
-    "tmEmail":"tm.com",
-    "cmEmail":"cm.com",
-    "desc":"make moremoney",
-    "status":"new",
+    "tmEmail":"amy.smith@bando.com", 
+    "cmEmail":"bryant.jones@bando.com", 
+    "desc":"make moremoney", 
+    "stage":"new", 
     "nextSteps": "call Mo",
-    "dateSubmitted": "02/20/2020"
+    "dateSubmitted": "3/22/2000",
+    "clientContact": "Joe Schmoe",
+    "clientDept": "agriculture",
+    "clientAcct": "Bayer",
+    "oppOwner": "Jane Doe"
 }
 
         Update
