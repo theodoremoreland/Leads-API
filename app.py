@@ -15,31 +15,6 @@ from bson.json_util import dumps
 from validation import has_all_keys, has_valid_emails, has_valid_date, has_valid_ids
 from sendEmail import sendEmail
 
-# @param userID
-# @param salesForceId
-# @param consultant
-# @param consEmail
-# @param bizUnit
-# @param clientAcct
-# @param capability
-# @param leadName
-# @param tmEmail
-# @param cmEmail
-# @param desc
-# @param status
-# @param nextSteps
-# @param dateSubmitted
-# @param clientContact
-# @param clientDept
-# @param oppOwner
-
-# @param userID
-# @param consultant
-# @param password
-# @param consEmail
-# @param tmEmail
-# @param cmEmail
-
 # Initialize the Flask App
 app = FlaskAPI(__name__)
 CORS(app)
@@ -77,15 +52,11 @@ def create_user():
     users_collection.insert_one(q)
     return f'{status.HTTP_201_CREATED} : Content created.'
 
+
 # ? Users can create a new record.
 @app.route("/create-record", methods=["POST"])
 def create_record():
     q = request.data
-     
-    print(f'Keys: {has_all_keys(q)}')
-    print(f'E-mails: {has_valid_emails(q)}')
-    print(f'Date: {has_valid_date(q)}')
-    print(f'userId: {has_valid_ids(q)}')
 
     if has_all_keys(q)["Valid"]:
         pass
@@ -111,6 +82,7 @@ def create_record():
 
     return f'{status.HTTP_201_CREATED} : Content created.'
     
+
 # ? Users can retrieve records they have submitted.
 @app.route("/get-records/<string:id>", methods=["GET"])
 def get_record(id):
@@ -129,6 +101,7 @@ def get_record(id):
 
     return results
 
+
 # ? Returns all user records in json format
 @app.route("/get-users", methods=["GET"])
 def get_users():
@@ -142,6 +115,7 @@ def get_users():
     results = json.loads(results)
 
     return results
+
 
 # ? Returns the highest userID or salesForceId.
 @app.route("/get-highest-id/<string:collection>/<string:field>", methods=["GET"])
@@ -159,6 +133,7 @@ def get_highest_id(collection, field):
     results = json.loads(results)
 
     return results
+
 
 # ? Accepts a list of json leads/records and updates them in database.
 # ? Can update all records or just one, but data must be passed in as an array / list

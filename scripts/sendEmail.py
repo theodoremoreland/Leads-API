@@ -1,8 +1,8 @@
-# import the smtplib module. It should be included in Python by default
+# Native
 import smtplib
 import re
 
-# import necessary packages
+
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
@@ -24,7 +24,7 @@ def sendEmail(data):
     message_template = read_template('resources/message.txt')
 
     keys = data.keys() 
-    regex = re.compile(r".+?([Ee]mail)")
+    email_regex = re.compile(r".+?([Ee]mail)")
     desc = data["desc"]
 
     # Replace all newlines with <br>
@@ -45,7 +45,7 @@ def sendEmail(data):
     desc = re.sub(r"Additional Info:", "<strong>Additional Info:</strong>", desc)
 
     for key in keys:
-        if re.fullmatch(regex, key):
+        if re.fullmatch(email_regex, key):
             
             msg = MIMEMultipart() # create a message
             
@@ -63,8 +63,6 @@ def sendEmail(data):
             clientDept = data["clientDept"],
             clientContact = data["clientContact"]
             )
-
-            #print(message)
 
             # setup the parameters of the message
             msg['From'] = address
